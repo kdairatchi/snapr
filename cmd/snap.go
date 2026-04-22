@@ -12,12 +12,14 @@ import (
 )
 
 var (
-	snapCfgPath string
-	snapOutDir  string
-	snapFormat  string
-	snapWidth   int
-	snapHeight  int
-	snapFull    bool
+	snapCfgPath   string
+	snapOutDir    string
+	snapFormat    string
+	snapWidth     int
+	snapHeight    int
+	snapFull      bool
+	snapWorkers   int
+	snapViewports string
 )
 
 var snapCmd = &cobra.Command{
@@ -80,24 +82,81 @@ var snapCmd = &cobra.Command{
 			return fmt.Errorf("no routes defined")
 		}
 
-		fmt.Printf("snapr: capturing %d route(s) → %s/\n", len(routes), outDir)
+		// Build jobs, optionally expanding per viewport.
+		var jobs []capture.Job
+		vps := capture.ParseViewports(snapViewports)
+		if len(vps) > 0 {
+			for _, r := range routes {
+				for vpName, vp := range capture.Viewports {
+					// Only include viewports that were requested.
+					for _, requested := range vps {
+						if requested == vp {
+							jobs = append(jobs, capture.Job{
+								URL:  r.URL,
+								Name: r.Name + "-" + vpName,
+							})
+							break
+						}
+					}
+				}
+			}
+		} else {
+			for _, r := range routes {
+				jobs = append(jobs, capture.Job{URL: r.URL, Name: r.Name})
+			}
+		}
+
+		fmt.Printf("snapr: capturing %d job(s) → %s/\n", len(jobs), outDir)
 
 		ctx := context.Background()
+
+		// When viewports are set, each job needs its own opts copy with the right size.
+		// For simplicity, BulkSnap uses the same opts; viewport expansion adjusts per-job
+		// by running jobs sequentially with custom opts when viewports flag is active.
+		var results []capture.BulkResult
+		if len(vps) > 0 {
+			results = make([]capture.BulkResult, len(jobs))
+			for i, j := range jobs {
+				// Determine which viewport applies to this job by matching the name suffix.
+				jobOpts := opts
+				for vpName, vp := range capture.Viewports {
+					suffix := "-" + vpName
+					if len(j.Name) >= len(suffix) && j.Name[len(j.Name)-len(suffix):] == suffix {
+						jobOpts.Width = vp[0]
+						jobOpts.Height = vp[1]
+						break
+					}
+				}
+				r, err := capture.Snap(ctx, j.URL, outDir, j.Name, jobOpts)
+				results[i] = capture.BulkResult{Result: r, Err: err, Job: j}
+			}
+		} else {
+			results = capture.BulkSnap(ctx, jobs, outDir, opts, snapWorkers)
+		}
+
 		var failed []string
-		for _, r := range routes {
-			result, err := capture.Snap(ctx, r.URL, outDir, r.Name, opts)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "  FAIL  %s: %v\n", r.URL, err)
-				failed = append(failed, r.URL)
+		for _, br := range results {
+			if br.Err != nil {
+				fmt.Fprintf(os.Stderr, "  FAIL  %s: %v\n", br.Job.URL, br.Err)
+				failed = append(failed, br.Job.URL)
 				continue
 			}
-			fmt.Printf("  OK    %s → %s\n", r.URL, filepath.Base(result.Path))
+			if br.Result != nil {
+				fmt.Printf("  OK    %s → %s\n", br.Job.URL, filepath.Base(br.Result.Path))
+			}
+		}
+
+		manifestPath := filepath.Join(outDir, "manifest.json")
+		if err := capture.WriteManifest(outDir, results); err != nil {
+			fmt.Fprintf(os.Stderr, "manifest: %v\n", err)
+		} else {
+			fmt.Printf("\nmanifest: %s\n", manifestPath)
 		}
 
 		if len(failed) > 0 {
 			return fmt.Errorf("%d route(s) failed", len(failed))
 		}
-		fmt.Printf("\ndone: %d screenshot(s) in %s/\n", len(routes), outDir)
+		fmt.Printf("done: %d screenshot(s) in %s/\n", len(jobs), outDir)
 		return nil
 	},
 }
@@ -109,5 +168,7 @@ func init() {
 	snapCmd.Flags().IntVar(&snapWidth, "width", 0, "viewport width")
 	snapCmd.Flags().IntVar(&snapHeight, "height", 0, "viewport height")
 	snapCmd.Flags().BoolVar(&snapFull, "full", false, "capture full page (scroll height)")
+	snapCmd.Flags().IntVar(&snapWorkers, "workers", 4, "number of concurrent capture workers")
+	snapCmd.Flags().StringVar(&snapViewports, "viewports", "", "comma-separated viewports: mobile,tablet,desktop,wide")
 	rootCmd.AddCommand(snapCmd)
 }
