@@ -1,0 +1,75 @@
+name: snapr
+description: Screenshot your web project routes on every deploy
+author: kdairatchi
+
+inputs:
+  config:
+    description: Path to snapr.toml
+    required: false
+    default: snapr.toml
+  url:
+    description: Single URL to screenshot (alternative to config)
+    required: false
+  format:
+    description: Output format — png, pdf, or webp
+    required: false
+    default: png
+  out:
+    description: Output directory
+    required: false
+    default: screenshots
+  full:
+    description: Capture full page height
+    required: false
+    default: "true"
+  upload:
+    description: Upload screenshots as workflow artifact
+    required: false
+    default: "true"
+  version:
+    description: snapr version to use
+    required: false
+    default: latest
+
+outputs:
+  screenshots-dir:
+    description: Directory containing screenshots
+    value: ${{ inputs.out }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install snapr
+      shell: bash
+      run: |
+        VERSION="${{ inputs.version }}"
+        if [ "$VERSION" = "latest" ]; then
+          VERSION=$(curl -s https://api.github.com/repos/kdairatchi/snapr/releases/latest | grep '"tag_name"' | cut -d'"' -f4)
+        fi
+        OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+        ARCH=$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
+        URL="https://github.com/kdairatchi/snapr/releases/download/${VERSION}/snapr_${OS}_${ARCH}.tar.gz"
+        curl -sSL "$URL" | tar -xz -C /usr/local/bin snapr
+        chmod +x /usr/local/bin/snapr
+
+    - name: Run snapr
+      shell: bash
+      run: |
+        ARGS=""
+        if [ -n "${{ inputs.url }}" ]; then
+          ARGS="${{ inputs.url }}"
+        elif [ -f "${{ inputs.config }}" ]; then
+          ARGS="--config ${{ inputs.config }}"
+        fi
+        snapr snap $ARGS \
+          --format "${{ inputs.format }}" \
+          --out "${{ inputs.out }}" \
+          ${{ inputs.full == 'true' && '--full' || '' }}
+
+    - name: Upload screenshots
+      if: ${{ inputs.upload == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: snapr-screenshots
+        path: ${{ inputs.out }}/
+        retention-days: 30

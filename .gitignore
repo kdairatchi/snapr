@@ -1,0 +1,6 @@
+snapr
+snapr.exe
+dist/
+screenshots/
+*.toml
+!snapr.toml.example

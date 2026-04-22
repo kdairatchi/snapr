@@ -1,0 +1,25 @@
+[output]
+dir = "screenshots"
+format = "png"       # png | pdf | webp
+width = 1440
+height = 900
+full_page = true
+
+# individual routes
+[[routes]]
+url = "http://localhost:4000"
+name = "home"
+
+[[routes]]
+url = "http://localhost:4000/about"
+name = "about"
+
+[[routes]]
+url = "http://localhost:4000/blog"
+name = "blog"
+
+# OR: project with base URL + path list
+[[projects]]
+name = "prowlrbot"
+base = "https://prowlrbot.com"
+routes = ["/", "/tools", "/about", "/blog"]
