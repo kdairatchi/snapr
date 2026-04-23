@@ -37,5 +37,6 @@ brews:
     repository:
       owner: kdairatchi
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: https://github.com/kdairatchi/snapr
     description: Screenshot any web project — local, live, or CI
