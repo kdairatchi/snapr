@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"regexp"
 
 	"github.com/BurntSushi/toml"
 )
@@ -34,16 +36,32 @@ type Config struct {
 
 func (c *Config) AllRoutes() []Route {
 	var out []Route
-	out = append(out, c.Routes...)
+	for _, r := range c.Routes {
+		out = append(out, Route{URL: r.URL, Name: safeName(r.Name)})
+	}
 	for _, p := range c.Projects {
+		base := safeName(p.Name)
 		for _, r := range p.Routes {
 			out = append(out, Route{
 				URL:  p.Base + r,
-				Name: p.Name + "-" + sanitize(r),
+				Name: base + "-" + sanitize(r),
 			})
 		}
 	}
 	return out
+}
+
+var unsafeNameRe = regexp.MustCompile(`[^a-zA-Z0-9._-]`)
+
+// safeName strips path traversal and non-filesystem-safe characters from a
+// user-supplied route or project name before using it as an output filename.
+func safeName(s string) string {
+	s = filepath.Base(s) // collapse any directory components (e.g. ../../etc)
+	s = unsafeNameRe.ReplaceAllString(s, "-")
+	if s == "" || s == "." || s == ".." {
+		return "unnamed"
+	}
+	return s
 }
 
 func sanitize(s string) string {

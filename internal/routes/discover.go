@@ -41,12 +41,20 @@ type sitemap struct {
 }
 
 func parseSitemap(r io.Reader, base string) ([]Route, error) {
+	baseURL, err := url.Parse(base)
+	if err != nil {
+		return nil, fmt.Errorf("parse base: %w", err)
+	}
 	var sm sitemap
 	if err := xml.NewDecoder(r).Decode(&sm); err != nil {
 		return nil, fmt.Errorf("decode sitemap: %w", err)
 	}
 	var routes []Route
 	for _, u := range sm.URLs {
+		parsed, err := url.Parse(u.Loc)
+		if err != nil || parsed.Host != baseURL.Host {
+			continue // skip off-host URLs to prevent SSRF via malicious sitemaps
+		}
 		routes = append(routes, Route{
 			URL:  u.Loc,
 			Name: urlToName(u.Loc, base),
@@ -57,15 +65,19 @@ func parseSitemap(r io.Reader, base string) ([]Route, error) {
 
 // Crawl visits a URL via chromedp and collects same-origin links.
 func Crawl(ctx context.Context, base string, maxPages int) ([]Route, error) {
-	allocCtx, cancel := chromedp.NewExecAllocator(ctx,
+	// NoSandbox required for containerized/CI environments where kernel user namespaces are unavailable.
+	allocCtx, cancelAlloc := chromedp.NewExecAllocator(ctx,
 		chromedp.NoSandbox,
 		chromedp.Headless,
 		chromedp.DisableGPU,
 	)
-	defer cancel()
+	defer cancelAlloc()
 
-	taskCtx, cancel := chromedp.NewContext(allocCtx)
-	defer cancel()
+	taskCtx, cancelTask := chromedp.NewContext(allocCtx)
+	defer cancelTask()
+
+	taskCtx, cancelTimeout := context.WithTimeout(taskCtx, 5*time.Minute)
+	defer cancelTimeout()
 
 	seen := map[string]bool{base: true}
 	queue := []string{base}

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net"
-	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -55,6 +54,9 @@ var serveCmd = &cobra.Command{
 		}
 
 		parts := strings.Fields(serveCommand)
+		if len(parts) == 0 {
+			return fmt.Errorf("--cmd produced empty command")
+		}
 		proc := exec.Command(parts[0], parts[1:]...)
 		proc.Stdout = os.Stdout
 		proc.Stderr = os.Stderr
@@ -65,6 +67,7 @@ var serveCmd = &cobra.Command{
 		}
 		defer func() {
 			_ = proc.Process.Kill()
+			_ = proc.Wait() // reap zombie; ignore error (process already killed)
 		}()
 
 		fmt.Printf("waiting for localhost:%d", servePort)
@@ -103,8 +106,6 @@ var serveCmd = &cobra.Command{
 			fmt.Printf("  OK    %s → %s\n", r.URL, filepath.Base(result.Path))
 		}
 
-		_ = proc.Process.Kill()
-
 		if len(failed) > 0 {
 			return fmt.Errorf("%d route(s) failed", len(failed))
 		}
@@ -127,9 +128,6 @@ func waitForPort(port int, timeout time.Duration) error {
 	}
 	return fmt.Errorf("timeout after %.0fs", timeout.Seconds())
 }
-
-// unused but kept for future redirect-follow
-var _ = http.Get
 
 func init() {
 	serveCmd.Flags().StringVar(&serveCommand, "cmd", "", "dev server command to run (required)")

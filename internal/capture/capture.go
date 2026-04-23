@@ -49,20 +49,21 @@ func Snap(ctx context.Context, url, outDir, name string, opts Options) (*Result,
 }
 
 func snapImage(ctx context.Context, url, outDir, name string, opts Options, ext string) (*Result, error) {
-	allocCtx, cancel := chromedp.NewExecAllocator(ctx,
+	// NoSandbox required for containerized/CI environments where kernel user namespaces are unavailable.
+	allocCtx, cancelAlloc := chromedp.NewExecAllocator(ctx,
 		chromedp.NoSandbox,
 		chromedp.Headless,
 		chromedp.DisableGPU,
 		chromedp.WindowSize(opts.Width, opts.Height),
 		chromedp.Flag("disable-dev-shm-usage", true),
 	)
-	defer cancel()
+	defer cancelAlloc()
 
-	taskCtx, cancel := chromedp.NewContext(allocCtx)
-	defer cancel()
+	taskCtx, cancelTask := chromedp.NewContext(allocCtx)
+	defer cancelTask()
 
-	taskCtx, cancel = context.WithTimeout(taskCtx, opts.Timeout)
-	defer cancel()
+	taskCtx, cancelTimeout := context.WithTimeout(taskCtx, opts.Timeout)
+	defer cancelTimeout()
 
 	var buf []byte
 	tasks := chromedp.Tasks{
@@ -91,20 +92,21 @@ func snapImage(ctx context.Context, url, outDir, name string, opts Options, ext 
 }
 
 func snapPDF(ctx context.Context, url, outDir, name string, opts Options) (*Result, error) {
-	allocCtx, cancel := chromedp.NewExecAllocator(ctx,
+	// NoSandbox required for containerized/CI environments where kernel user namespaces are unavailable.
+	allocCtx, cancelAlloc := chromedp.NewExecAllocator(ctx,
 		chromedp.NoSandbox,
 		chromedp.Headless,
 		chromedp.DisableGPU,
 		chromedp.WindowSize(opts.Width, opts.Height),
 		chromedp.Flag("disable-dev-shm-usage", true),
 	)
-	defer cancel()
+	defer cancelAlloc()
 
-	taskCtx, cancel := chromedp.NewContext(allocCtx)
-	defer cancel()
+	taskCtx, cancelTask := chromedp.NewContext(allocCtx)
+	defer cancelTask()
 
-	taskCtx, cancel = context.WithTimeout(taskCtx, opts.Timeout)
-	defer cancel()
+	taskCtx, cancelTimeout := context.WithTimeout(taskCtx, opts.Timeout)
+	defer cancelTimeout()
 
 	var buf []byte
 	if err := chromedp.Run(taskCtx,

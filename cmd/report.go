@@ -45,8 +45,8 @@ type reportData struct {
 type cardData struct {
 	Name    string
 	URL     string
-	Src     string
-	FullSrc string
+	Src     template.URL // data: URI or relative path — must be template.URL to survive html/template URL sanitization
+	FullSrc template.URL
 }
 
 const reportTmpl = `<!DOCTYPE html>
@@ -139,7 +139,7 @@ var reportCmd = &cobra.Command{
 			low := strings.ToLower(base)
 			isPNG := strings.HasSuffix(low, ".png")
 
-			var src, fullSrc string
+			var src, fullSrc template.URL
 			if reportEmbed {
 				imgBytes, err := os.ReadFile(filepath.Join(reportDir, fname))
 				if err != nil {
@@ -150,11 +150,11 @@ var reportCmd = &cobra.Command{
 				if isPNG {
 					mime = "image/png"
 				}
-				src = "data:" + mime + ";base64," + enc
+				src = template.URL("data:" + mime + ";base64," + enc)
 				fullSrc = src
 			} else {
-				src = base
-				fullSrc = base
+				src = template.URL(base)
+				fullSrc = template.URL(base)
 			}
 
 			name := strings.TrimSuffix(strings.TrimSuffix(strings.TrimSuffix(base, ".jpeg"), ".jpg"), ".png")
@@ -181,7 +181,10 @@ var reportCmd = &cobra.Command{
 		}
 
 		// Render template
-		tmpl := template.Must(template.New("report").Parse(reportTmpl))
+		tmpl, err := template.New("report").Parse(reportTmpl)
+		if err != nil {
+			return fmt.Errorf("parse report template: %w", err)
+		}
 
 		f, err := os.Create(reportOut)
 		if err != nil {

@@ -3,9 +3,8 @@ package diff
 import (
 	"fmt"
 	"image"
-	"image/png"
 	_ "image/jpeg"
-	_ "image/png"
+	"image/png"
 	"os"
 	"path/filepath"
 	"strings"

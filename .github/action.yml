@@ -48,23 +48,29 @@ runs:
         fi
         OS=$(uname -s | tr '[:upper:]' '[:lower:]')
         ARCH=$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
-        URL="https://github.com/kdairatchi/snapr/releases/download/${VERSION}/snapr_${OS}_${ARCH}.tar.gz"
-        curl -sSL "$URL" | tar -xz -C /usr/local/bin snapr
+        BASE_URL="https://github.com/kdairatchi/snapr/releases/download/${VERSION}"
+        ARCHIVE="snapr_${OS}_${ARCH}.tar.gz"
+        curl -sSL "${BASE_URL}/${ARCHIVE}" -o /tmp/snapr.tar.gz
+        curl -sSL "${BASE_URL}/checksums.txt" -o /tmp/snapr.checksums
+        grep "${ARCHIVE}" /tmp/snapr.checksums | sha256sum -c -
+        tar -xz -C /usr/local/bin snapr < /tmp/snapr.tar.gz
         chmod +x /usr/local/bin/snapr
 
     - name: Run snapr
       shell: bash
       run: |
-        ARGS=""
+        SNAP_ARGS=()
         if [ -n "${{ inputs.url }}" ]; then
-          ARGS="${{ inputs.url }}"
+          SNAP_ARGS+=("${{ inputs.url }}")
         elif [ -f "${{ inputs.config }}" ]; then
-          ARGS="--config ${{ inputs.config }}"
+          SNAP_ARGS+=("--config" "${{ inputs.config }}")
         fi
-        snapr snap $ARGS \
-          --format "${{ inputs.format }}" \
-          --out "${{ inputs.out }}" \
-          ${{ inputs.full == 'true' && '--full' || '' }}
+        SNAP_ARGS+=("--format" "${{ inputs.format }}")
+        SNAP_ARGS+=("--out" "${{ inputs.out }}")
+        if [ "${{ inputs.full }}" = "true" ]; then
+          SNAP_ARGS+=("--full")
+        fi
+        snapr snap "${SNAP_ARGS[@]}"
 
     - name: Upload screenshots
       if: ${{ inputs.upload == 'true' }}

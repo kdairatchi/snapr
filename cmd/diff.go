@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 
 	"github.com/kdairatchi/snapr/internal/diff"
@@ -56,7 +55,7 @@ var diffCmd = &cobra.Command{
 		fmt.Printf("\nsummary: %d diff, %d missing, %d identical\n", nDiff, nMissing, nSame)
 
 		if diffFailOnDiff && (nDiff > 0 || nMissing > 0) {
-			os.Exit(1)
+			return fmt.Errorf("%d changed, %d missing", nDiff, nMissing)
 		}
 		return nil
 	},

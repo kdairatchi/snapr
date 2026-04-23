@@ -83,21 +83,17 @@ var snapCmd = &cobra.Command{
 		}
 
 		// Build jobs, optionally expanding per viewport.
+		// Use ParseViewportNames (not ParseViewports) to preserve input order and carry names.
 		var jobs []capture.Job
-		vps := capture.ParseViewports(snapViewports)
-		if len(vps) > 0 {
+		vpNames := capture.ParseViewportNames(snapViewports)
+		if len(vpNames) > 0 {
 			for _, r := range routes {
-				for vpName, vp := range capture.Viewports {
-					// Only include viewports that were requested.
-					for _, requested := range vps {
-						if requested == vp {
-							jobs = append(jobs, capture.Job{
-								URL:  r.URL,
-								Name: r.Name + "-" + vpName,
-							})
-							break
-						}
-					}
+				for _, vpName := range vpNames { // ordered — no map iteration
+					jobs = append(jobs, capture.Job{
+						URL:          r.URL,
+						Name:         r.Name + "-" + vpName,
+						ViewportName: vpName,
+					})
 				}
 			}
 		} else {
@@ -110,22 +106,16 @@ var snapCmd = &cobra.Command{
 
 		ctx := context.Background()
 
-		// When viewports are set, each job needs its own opts copy with the right size.
-		// For simplicity, BulkSnap uses the same opts; viewport expansion adjusts per-job
-		// by running jobs sequentially with custom opts when viewports flag is active.
+		// Viewport jobs each need their own opts; run sequentially with per-job opts.
+		// Non-viewport jobs use BulkSnap's worker pool.
 		var results []capture.BulkResult
-		if len(vps) > 0 {
+		if len(vpNames) > 0 {
 			results = make([]capture.BulkResult, len(jobs))
 			for i, j := range jobs {
-				// Determine which viewport applies to this job by matching the name suffix.
 				jobOpts := opts
-				for vpName, vp := range capture.Viewports {
-					suffix := "-" + vpName
-					if len(j.Name) >= len(suffix) && j.Name[len(j.Name)-len(suffix):] == suffix {
-						jobOpts.Width = vp[0]
-						jobOpts.Height = vp[1]
-						break
-					}
+				if vp, ok := capture.Viewports[j.ViewportName]; ok {
+					jobOpts.Width = vp[0]
+					jobOpts.Height = vp[1]
 				}
 				r, err := capture.Snap(ctx, j.URL, outDir, j.Name, jobOpts)
 				results[i] = capture.BulkResult{Result: r, Err: err, Job: j}

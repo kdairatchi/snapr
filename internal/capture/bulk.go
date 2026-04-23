@@ -6,8 +6,9 @@ import (
 )
 
 type Job struct {
-	URL  string
-	Name string
+	URL          string
+	Name         string
+	ViewportName string // when set, overrides opts Width/Height with Viewports[ViewportName]
 }
 
 type BulkResult struct {

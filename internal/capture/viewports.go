@@ -24,3 +24,19 @@ func ParseViewports(s string) [][2]int {
 	}
 	return out
 }
+
+// ParseViewportNames returns the ordered list of valid viewport names from a
+// comma-separated string. Preserves input order; unknown names are skipped.
+func ParseViewportNames(s string) []string {
+	if s == "" {
+		return nil
+	}
+	var out []string
+	for _, name := range strings.Split(s, ",") {
+		name = strings.TrimSpace(name)
+		if _, ok := Viewports[name]; ok {
+			out = append(out, name)
+		}
+	}
+	return out
+}
