@@ -70,6 +70,7 @@ func Crawl(ctx context.Context, base string, maxPages int) ([]Route, error) {
 		chromedp.NoSandbox,
 		chromedp.Headless,
 		chromedp.DisableGPU,
+		chromedp.Flag("no-zygote", true),
 	)
 	defer cancelAlloc()
 

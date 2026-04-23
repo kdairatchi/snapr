@@ -56,6 +56,7 @@ func snapImage(ctx context.Context, url, outDir, name string, opts Options, ext 
 		chromedp.DisableGPU,
 		chromedp.WindowSize(opts.Width, opts.Height),
 		chromedp.Flag("disable-dev-shm-usage", true),
+		chromedp.Flag("no-zygote", true),
 	)
 	defer cancelAlloc()
 
@@ -99,6 +100,7 @@ func snapPDF(ctx context.Context, url, outDir, name string, opts Options) (*Resu
 		chromedp.DisableGPU,
 		chromedp.WindowSize(opts.Width, opts.Height),
 		chromedp.Flag("disable-dev-shm-usage", true),
+		chromedp.Flag("no-zygote", true),
 	)
 	defer cancelAlloc()
 
