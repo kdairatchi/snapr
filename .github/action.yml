@@ -58,16 +58,22 @@ runs:
 
     - name: Run snapr
       shell: bash
+      env:
+        SNAPR_URL: ${{ inputs.url }}
+        SNAPR_CONFIG: ${{ inputs.config }}
+        SNAPR_FORMAT: ${{ inputs.format }}
+        SNAPR_OUT: ${{ inputs.out }}
+        SNAPR_FULL: ${{ inputs.full }}
       run: |
         SNAP_ARGS=()
-        if [ -n "${{ inputs.url }}" ]; then
-          SNAP_ARGS+=("${{ inputs.url }}")
-        elif [ -f "${{ inputs.config }}" ]; then
-          SNAP_ARGS+=("--config" "${{ inputs.config }}")
+        if [ -n "$SNAPR_URL" ]; then
+          SNAP_ARGS+=("$SNAPR_URL")
+        elif [ -f "$SNAPR_CONFIG" ]; then
+          SNAP_ARGS+=("--config" "$SNAPR_CONFIG")
         fi
-        SNAP_ARGS+=("--format" "${{ inputs.format }}")
-        SNAP_ARGS+=("--out" "${{ inputs.out }}")
-        if [ "${{ inputs.full }}" = "true" ]; then
+        SNAP_ARGS+=("--format" "$SNAPR_FORMAT")
+        SNAP_ARGS+=("--out" "$SNAPR_OUT")
+        if [ "$SNAPR_FULL" = "true" ]; then
           SNAP_ARGS+=("--full")
         fi
         snapr snap "${SNAP_ARGS[@]}"

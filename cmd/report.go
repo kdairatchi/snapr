@@ -114,7 +114,7 @@ var reportCmd = &cobra.Command{
 			}
 			name := e.Name()
 			low := strings.ToLower(name)
-			if strings.HasSuffix(low, ".png") || strings.HasSuffix(low, ".jpg") || strings.HasSuffix(low, ".jpeg") {
+			if strings.HasSuffix(low, ".png") || strings.HasSuffix(low, ".jpg") || strings.HasSuffix(low, ".jpeg") || strings.HasSuffix(low, ".webp") {
 				files = append(files, name)
 			}
 		}
@@ -137,8 +137,6 @@ var reportCmd = &cobra.Command{
 		for _, fname := range files {
 			base := filepath.Base(fname)
 			low := strings.ToLower(base)
-			isPNG := strings.HasSuffix(low, ".png")
-
 			var src, fullSrc template.URL
 			if reportEmbed {
 				imgBytes, err := os.ReadFile(filepath.Join(reportDir, fname))
@@ -147,8 +145,11 @@ var reportCmd = &cobra.Command{
 				}
 				enc := base64.StdEncoding.EncodeToString(imgBytes)
 				mime := "image/jpeg"
-				if isPNG {
+				switch {
+				case strings.HasSuffix(low, ".png"):
 					mime = "image/png"
+				case strings.HasSuffix(low, ".webp"):
+					mime = "image/webp"
 				}
 				src = template.URL("data:" + mime + ";base64," + enc)
 				fullSrc = src
@@ -157,7 +158,7 @@ var reportCmd = &cobra.Command{
 				fullSrc = template.URL(base)
 			}
 
-			name := strings.TrimSuffix(strings.TrimSuffix(strings.TrimSuffix(base, ".jpeg"), ".jpg"), ".png")
+			name := strings.TrimSuffix(strings.TrimSuffix(strings.TrimSuffix(strings.TrimSuffix(base, ".webp"), ".jpeg"), ".jpg"), ".png")
 			url := ""
 			if r, ok := routeByFile[base]; ok {
 				if r.Name != "" {

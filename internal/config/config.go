@@ -44,7 +44,7 @@ func (c *Config) AllRoutes() []Route {
 		for _, r := range p.Routes {
 			out = append(out, Route{
 				URL:  p.Base + r,
-				Name: base + "-" + sanitize(r),
+				Name: base + "-" + safeName(sanitize(r)),
 			})
 		}
 	}
