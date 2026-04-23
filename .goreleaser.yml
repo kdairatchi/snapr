@@ -31,11 +31,3 @@ release:
   github:
     owner: kdairatchi
     name: snapr
-
-brews:
-  - name: snapr
-    repository:
-      owner: kdairatchi
-      name: homebrew-tap
-    homepage: https://github.com/kdairatchi/snapr
-    description: Screenshot any web project — local, live, or CI
