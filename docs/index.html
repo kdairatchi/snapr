@@ -13,11 +13,16 @@
 
   :root {
     --orange: #ff6b35;
+    --orange-dim: rgba(255,107,53,0.12);
     --bg: #0a0a0a;
     --card: #141414;
+    --card2: #181818;
     --border: #1e1e1e;
+    --border2: #2a2a2a;
     --text: #e0e0e0;
     --muted: #666;
+    --muted2: #888;
+    --green: #4caf88;
     --font-head: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
@@ -36,6 +41,7 @@
 
   a { color: inherit; text-decoration: none; }
 
+  /* ── Nav ── */
   nav {
     position: sticky;
     top: 0;
@@ -50,54 +56,94 @@
   }
 
   nav.scrolled {
-    background: rgba(10, 10, 10, 0.75);
+    background: rgba(10,10,10,0.8);
     border-color: var(--border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
+
+  .nav-left { display: flex; align-items: center; gap: 2.5rem; }
 
   .nav-wordmark {
     font-family: var(--font-head);
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: var(--text);
     letter-spacing: -0.02em;
+    white-space: nowrap;
   }
-
   .nav-wordmark span { color: var(--orange); }
+
+  .nav-links { display: flex; align-items: center; gap: 0.25rem; }
+
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--muted);
+    padding: 0.4rem 0.75rem;
+    border-radius: 5px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--card); }
+
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
+
+  .nav-version {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+  }
 
   .nav-github {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.45rem;
     font-family: var(--font-body);
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--muted);
     transition: color 0.15s;
   }
-
   .nav-github:hover { color: var(--text); }
+  .nav-github svg { width: 17px; height: 17px; fill: currentColor; flex-shrink: 0; }
 
-  .nav-github svg { width: 18px; height: 18px; fill: currentColor; }
-
+  /* ── Layout ── */
   section { padding: 5rem 2rem; }
-
   .container { max-width: 1100px; margin: 0 auto; }
 
-  .hero-section {
-    padding: 7rem 2rem 5rem;
-    text-align: center;
-  }
+  /* ── Hero ── */
+  .hero-section { padding: 6.5rem 2rem 5rem; text-align: center; }
 
-  .hero-eyebrow {
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 500;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.1em;
     color: var(--orange);
     text-transform: uppercase;
-    margin-bottom: 1.25rem;
+    background: var(--orange-dim);
+    border: 1px solid rgba(255,107,53,0.2);
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-badge-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
   }
 
   h1 {
@@ -109,14 +155,13 @@
     color: #fff;
     margin-bottom: 1rem;
   }
-
   h1 .dot { color: var(--orange); }
 
   .hero-tagline {
     font-family: var(--font-head);
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-size: clamp(0.9rem, 2.2vw, 1.1rem);
     font-weight: 500;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     color: var(--muted);
     text-transform: uppercase;
     margin-bottom: 0.75rem;
@@ -124,47 +169,56 @@
 
   .hero-sub {
     font-size: 1.0625rem;
-    color: var(--muted);
-    max-width: 480px;
-    margin: 0 auto 2.5rem;
+    color: var(--muted2);
+    max-width: 460px;
+    margin: 0 auto 2rem;
   }
 
   .cta-group {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
   }
 
   .btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.75rem;
+    padding: 0.7rem 1.6rem;
     border-radius: 6px;
     font-family: var(--font-head);
     font-size: 0.9375rem;
     font-weight: 600;
     cursor: pointer;
-    transition: opacity 0.15s, background 0.15s;
+    transition: opacity 0.15s, background 0.15s, border-color 0.15s;
     border: none;
   }
-
-  .btn-primary {
-    background: var(--orange);
-    color: #fff;
-  }
-
+  .btn-primary { background: var(--orange); color: #fff; }
   .btn-primary:hover { opacity: 0.88; }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border2); }
+  .btn-outline:hover { border-color: #3a3a3a; background: var(--card); }
 
-  .btn-outline {
-    background: transparent;
-    color: var(--text);
+  .quick-install {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--card);
     border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.6rem 0.6rem 1.1rem;
+    margin-bottom: 3.5rem;
+    max-width: 100%;
   }
-
-  .btn-outline:hover { border-color: #444; background: var(--card); }
+  .quick-install code {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .quick-install code .qi-cmd { color: var(--orange); }
+  .quick-install code .qi-pkg { color: var(--muted2); }
 
   .hero-image {
     max-width: 900px;
@@ -172,14 +226,11 @@
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid var(--border);
+    box-shadow: 0 0 0 1px var(--border), 0 40px 80px -20px rgba(0,0,0,0.6);
   }
+  .hero-image img { width: 100%; height: auto; display: block; }
 
-  .hero-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
+  /* ── Section headings ── */
   h2 {
     font-family: var(--font-head);
     font-size: clamp(1.5rem, 3vw, 2rem);
@@ -188,65 +239,128 @@
     color: #fff;
     margin-bottom: 0.5rem;
   }
-
   .section-label {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     letter-spacing: 0.15em;
     color: var(--orange);
     text-transform: uppercase;
     margin-bottom: 0.5rem;
   }
-
   .section-sub {
-    color: var(--muted);
-    margin-bottom: 3rem;
+    color: var(--muted2);
+    margin-bottom: 2.75rem;
     max-width: 500px;
   }
 
+  /* ── Features ── */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
     border: 1px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
   }
-
   .feature-card {
     background: var(--card);
     padding: 2rem 1.75rem;
+    border-right: 1px solid var(--border);
     transition: background 0.15s;
   }
-
-  .feature-card:hover { background: #1a1a1a; }
-
+  .feature-card:last-child { border-right: none; }
+  .feature-card:hover { background: var(--card2); }
   .feature-icon {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 1.1rem;
+    color: var(--orange);
   }
-
   .feature-card h3 {
     font-family: var(--font-head);
     font-size: 0.8125rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: #fff;
-    margin-bottom: 0.625rem;
+    margin-bottom: 0.6rem;
   }
+  .feature-card p { font-size: 0.875rem; color: var(--muted2); line-height: 1.65; }
 
-  .feature-card p {
-    font-size: 0.875rem;
-    color: var(--muted);
-    line-height: 1.6;
-  }
+  /* ── Copy button ── */
+  .copy-wrap { position: relative; }
 
-  .commands-grid {
+  .copy-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.55rem;
+    background: var(--border2);
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s, color 0.15s;
+    z-index: 2;
   }
+  .copy-wrap:hover .copy-btn,
+  .copy-btn:focus { opacity: 1; }
+  .copy-btn:hover { background: #333; color: var(--text); }
+  .copy-btn.copied { color: var(--green); border-color: rgba(76,175,136,0.3); background: rgba(76,175,136,0.08); opacity: 1; }
+  .copy-btn svg { width: 11px; height: 11px; fill: currentColor; flex-shrink: 0; }
+
+  /* inline copy for quick-install */
+  .copy-btn-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.7rem;
+    background: var(--border);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .copy-btn-inline:hover { background: var(--border2); color: var(--text); }
+  .copy-btn-inline.copied { color: var(--green); }
+  .copy-btn-inline svg { width: 11px; height: 11px; fill: currentColor; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(1rem);
+    background: #1f1f1f;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 0.6rem 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--green);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── Commands ── */
+  .commands-grid { display: flex; flex-direction: column; gap: 0.875rem; }
 
   .cmd-block {
     background: var(--card);
@@ -258,30 +372,26 @@
   .cmd-header {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1.25rem;
+    gap: 0.6rem;
+    padding: 0.7rem 1.25rem;
     border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
   }
-
-  .cmd-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--border);
-  }
+  .cmd-dots { display: flex; gap: 5px; }
+  .cmd-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border2); }
 
   .cmd-title {
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: 0.78rem;
     color: var(--muted);
+    flex: 1;
   }
-
   .cmd-title span { color: var(--orange); }
 
   .cmd-body {
-    padding: 1.25rem 1.5rem;
+    padding: 1.1rem 1.4rem;
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: 0.8rem;
     line-height: 2;
     white-space: pre-wrap;
     color: var(--text);
@@ -290,6 +400,7 @@
   .cmd-comment { color: var(--muted); }
   .cmd-url { color: var(--orange); }
 
+  /* ── Install ── */
   .install-section { background: var(--card); }
 
   .install-tabs {
@@ -299,22 +410,19 @@
     border-radius: 6px 6px 0 0;
     overflow: hidden;
     width: fit-content;
-    margin-bottom: 0;
   }
-
   .tab-btn {
-    padding: 0.625rem 1.25rem;
+    padding: 0.575rem 1.25rem;
     background: transparent;
     border: none;
+    border-right: 1px solid var(--border);
     color: var(--muted);
     font-family: var(--font-head);
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
-    border-right: 1px solid var(--border);
   }
-
   .tab-btn:last-child { border-right: none; }
   .tab-btn:hover { color: var(--text); }
   .tab-btn.active { background: var(--bg); color: var(--text); }
@@ -325,53 +433,35 @@
     border: 1px solid var(--border);
     border-top: none;
     border-radius: 0 6px 6px 6px;
-    padding: 1.5rem;
+    padding: 1.25rem 1.5rem;
     font-family: var(--font-mono);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     line-height: 2;
   }
-
   .tab-panel.active { display: block; }
 
-  .tab-panel .cmd-comment { color: var(--muted); }
-  .tab-panel .cmd-url { color: var(--orange); }
-
+  /* ── GitHub Action ── */
   .action-section .container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: start;
   }
-
   .action-desc h2 { margin-bottom: 1rem; }
-
   .action-desc p {
-    color: var(--muted);
+    color: var(--muted2);
     font-size: 0.9375rem;
-    margin-bottom: 1rem;
-    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    line-height: 1.75;
   }
-
-  .action-desc ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
+  .action-desc ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
   .action-desc ul li {
     font-size: 0.9rem;
-    color: var(--muted);
+    color: var(--muted2);
     padding-left: 1.25rem;
     position: relative;
   }
-
-  .action-desc ul li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: var(--orange);
-  }
+  .action-desc ul li::before { content: '—'; position: absolute; left: 0; color: var(--orange); }
 
   .yaml-block {
     background: var(--card);
@@ -379,25 +469,20 @@
     border-radius: 8px;
     overflow: hidden;
   }
-
   .yaml-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
+    padding: 0.7rem 1.25rem;
     border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.2);
   }
-
-  .yaml-header span {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--muted);
-  }
+  .yaml-header span { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
 
   .yaml-body {
     padding: 1.25rem 1.5rem;
     font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    font-size: 0.8rem;
     line-height: 1.9;
     white-space: pre;
     overflow-x: auto;
@@ -409,6 +494,7 @@
   .y-str { color: #a8d8a8; }
   .y-orange { color: var(--orange); }
 
+  /* ── Comparison ── */
   .comparison-table {
     width: 100%;
     border-collapse: collapse;
@@ -416,88 +502,127 @@
     border-radius: 8px;
     overflow: hidden;
   }
-
   .comparison-table th,
   .comparison-table td {
     padding: 0.875rem 1.25rem;
     text-align: left;
     border-bottom: 1px solid var(--border);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
   }
-
   .comparison-table th {
     font-family: var(--font-head);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--muted);
     background: var(--card);
   }
-
-  .comparison-table th:not(:first-child) { text-align: center; }
+  .comparison-table th.col-snapr {
+    color: var(--orange);
+    background: var(--orange-dim);
+  }
+  .comparison-table th:not(:first-child),
   .comparison-table td:not(:first-child) { text-align: center; }
-
   .comparison-table tr:last-child td { border-bottom: none; }
-
-  .comparison-table tr:hover td { background: #111; }
-
+  .comparison-table tbody tr:hover td { background: #111; }
   .comparison-table td:first-child { color: var(--text); }
-  .comparison-table td:not(:first-child) { color: var(--muted); }
+  .comparison-table td.col-snapr { background: rgba(255,107,53,0.04); }
 
   .check-snapr { color: var(--orange); font-size: 1rem; }
-  .check-yes { color: #4a9; font-size: 1rem; }
-  .check-no { color: #444; font-size: 1rem; }
+  .check-yes { color: var(--green); font-size: 1rem; }
+  .check-no { color: #333; font-size: 1.1rem; }
 
-  .col-snapr { color: var(--orange) !important; font-family: var(--font-head); font-weight: 600; }
-
+  /* ── Footer ── */
   footer {
     border-top: 1px solid var(--border);
-    padding: 2rem;
+    padding: 2.5rem 2rem;
     text-align: center;
+  }
+  .footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .footer-links a {
     font-size: 0.875rem;
     color: var(--muted);
+    transition: color 0.15s;
   }
+  .footer-links a:hover { color: var(--text); }
+  .footer-copy { font-size: 0.8rem; color: #3a3a3a; }
+  .footer-copy a { color: #3a3a3a; transition: color 0.15s; }
+  .footer-copy a:hover { color: var(--muted); }
 
-  footer a { color: var(--muted); transition: color 0.15s; }
-  footer a:hover { color: var(--text); }
-
+  /* ── Responsive ── */
   @media (max-width: 900px) {
     .features-grid { grid-template-columns: repeat(2, 1fr); }
-    .action-section .container { grid-template-columns: 1fr; gap: 2rem; }
+    .feature-card { border-bottom: 1px solid var(--border); }
+    .action-section .container { grid-template-columns: 1fr; gap: 2.5rem; }
+    .nav-links { display: none; }
   }
-
   @media (max-width: 600px) {
     nav { padding: 0 1.25rem; }
     section { padding: 3.5rem 1.25rem; }
-    .hero-section { padding: 4.5rem 1.25rem 3rem; }
+    .hero-section { padding: 4rem 1.25rem 3rem; }
     .features-grid { grid-template-columns: 1fr; }
-    .comparison-table th, .comparison-table td { padding: 0.75rem; font-size: 0.8125rem; }
+    .quick-install { flex-wrap: wrap; justify-content: center; }
+    .quick-install code { font-size: 0.74rem; }
+    .comparison-table th, .comparison-table td { padding: 0.7rem 0.875rem; font-size: 0.8125rem; }
+    .nav-version { display: none; }
   }
 </style>
 </head>
 <body>
 
+<div class="toast" id="toast">copied to clipboard</div>
+
+<!-- ── Nav ── -->
 <nav id="nav">
-  <a href="/" class="nav-wordmark">snapr<span>.</span></a>
-  <a href="https://github.com/kdairatchi/snapr" target="_blank" rel="noopener" class="nav-github">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-    GitHub
-  </a>
+  <div class="nav-left">
+    <a href="/" class="nav-wordmark">snapr<span>.</span></a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#commands">Commands</a>
+      <a href="#install">Install</a>
+      <a href="#action">CI/CD</a>
+    </div>
+  </div>
+  <div class="nav-right">
+    <span class="nav-version">v0.1.0</span>
+    <a href="https://github.com/kdairatchi/snapr" target="_blank" rel="noopener" class="nav-github">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+      GitHub
+    </a>
+  </div>
 </nav>
 
+<!-- ── Hero ── -->
 <section class="hero-section">
   <div class="container">
-    <div class="hero-eyebrow">Go CLI · open source</div>
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Go CLI &nbsp;·&nbsp; open source &nbsp;·&nbsp; v0.1.0
+    </div>
     <h1>snapr<span class="dot">.</span></h1>
-    <div class="hero-tagline">SNAP. CRAWL. DOCUMENT.</div>
-    <p class="hero-sub">Automated screenshots &amp; PDFs for your projects.</p>
+    <div class="hero-tagline">Snap &nbsp;·&nbsp; Crawl &nbsp;·&nbsp; Document</div>
+    <p class="hero-sub">Automated screenshots &amp; PDFs for any web project — local dev, live site, or CI pipeline.</p>
     <div class="cta-group">
-      <a href="#install" class="btn btn-primary">Install</a>
+      <a href="#install" class="btn btn-primary">Get snapr</a>
       <a href="https://github.com/kdairatchi/snapr" target="_blank" rel="noopener" class="btn btn-outline">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        GitHub
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        View on GitHub
       </a>
+    </div>
+    <div class="quick-install">
+      <code><span class="qi-cmd">go install</span> <span class="qi-pkg">github.com/kdairatchi/snapr@latest</span></code>
+      <button class="copy-btn-inline" data-copy="go install github.com/kdairatchi/snapr@latest" aria-label="Copy install command">
+        <svg viewBox="0 0 16 16"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+        copy
+      </button>
     </div>
     <div class="hero-image">
       <img src="./hero.png" alt="snapr — automated screenshots and PDFs">
@@ -505,29 +630,30 @@
   </div>
 </section>
 
-<section>
+<!-- ── Features ── -->
+<section id="features">
   <div class="container">
     <div class="section-label">What it does</div>
     <h2>Everything screenshot automation needs</h2>
     <p class="section-sub">From a single URL to a full CI/CD visual regression pipeline in one binary.</p>
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">📸</div>
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M9 3v2M15 3v2M9 19v2M15 19v2M3 9h2M3 15h2M19 9h2M19 15h2"/></svg>
         <h3>Snap Anything</h3>
         <p>Single URL, config file, or live dev server — snapr handles all three entry points with the same output quality.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🕷</div>
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3z"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg>
         <h3>Crawl Automatically</h3>
         <p>Discover routes via sitemap or link crawl. Same-origin only. Configurable depth and worker count.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">⚙️</div>
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>
         <h3>Config Driven</h3>
         <p><code style="font-family:var(--font-mono);font-size:0.8em;color:var(--orange)">snapr.toml</code> — define named routes, output paths, viewports, and project groups once.</p>
       </div>
       <div class="feature-card">
-        <div class="feature-icon">🚀</div>
+        <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         <h3>CI/CD Ready</h3>
         <p>GitHub Action, goreleaser binaries, visual regression diff with <code style="font-family:var(--font-mono);font-size:0.8em;color:var(--orange)">--fail-on-diff</code>.</p>
       </div>
@@ -535,17 +661,21 @@
   </div>
 </section>
 
-<section style="background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+<!-- ── Commands ── -->
+<section id="commands" style="background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class="container">
     <div class="section-label">Commands</div>
     <h2>Five commands, full workflow</h2>
-    <p class="section-sub" style="margin-bottom: 2.5rem;">Everything from a quick one-off capture to a full visual regression pipeline.</p>
+    <p class="section-sub">Everything from a quick one-off capture to a full visual regression pipeline.</p>
     <div class="commands-grid">
-      <div class="cmd-block">
+
+      <div class="cmd-block copy-wrap">
+        <button class="copy-btn" aria-label="Copy command">
+          <svg viewBox="0 0 16 16"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          copy
+        </button>
         <div class="cmd-header">
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
+          <div class="cmd-dots"><div class="cmd-dot"></div><div class="cmd-dot"></div><div class="cmd-dot"></div></div>
           <span class="cmd-title"><span>snapr snap</span> — capture a URL or config</span>
         </div>
         <div class="cmd-body"><span class="cmd-comment"># single URL</span>
@@ -557,11 +687,14 @@ snapr snap --config snapr.toml --viewports mobile,desktop --workers 6
 <span class="cmd-comment"># full-page PDF</span>
 snapr snap <span class="cmd-url">http://localhost:4000</span> --format pdf --full</div>
       </div>
-      <div class="cmd-block">
+
+      <div class="cmd-block copy-wrap">
+        <button class="copy-btn" aria-label="Copy command">
+          <svg viewBox="0 0 16 16"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          copy
+        </button>
         <div class="cmd-header">
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
+          <div class="cmd-dots"><div class="cmd-dot"></div><div class="cmd-dot"></div><div class="cmd-dot"></div></div>
           <span class="cmd-title"><span>snapr crawl</span> — auto-discover and capture all routes</span>
         </div>
         <div class="cmd-body"><span class="cmd-comment"># crawl a local dev server</span>
@@ -570,11 +703,14 @@ snapr crawl <span class="cmd-url">http://localhost:4000</span>
 <span class="cmd-comment"># sitemap-first, cap at 20 pages</span>
 snapr crawl <span class="cmd-url">https://prowlrbot.com</span> --sitemap --max 20 --workers 8</div>
       </div>
-      <div class="cmd-block">
+
+      <div class="cmd-block copy-wrap">
+        <button class="copy-btn" aria-label="Copy command">
+          <svg viewBox="0 0 16 16"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          copy
+        </button>
         <div class="cmd-header">
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
+          <div class="cmd-dots"><div class="cmd-dot"></div><div class="cmd-dot"></div><div class="cmd-dot"></div></div>
           <span class="cmd-title"><span>snapr serve</span> — start server, snap, shut down</span>
         </div>
         <div class="cmd-body"><span class="cmd-comment"># spin up hwaro, wait for :4000, capture, kill</span>
@@ -584,11 +720,14 @@ snapr serve --cmd "hwaro serve" --port 4000 --config snapr.toml
 snapr serve --cmd "npm run dev" --port 3000
 snapr serve --cmd "hugo server" --port 1313 --wait 10</div>
       </div>
-      <div class="cmd-block">
+
+      <div class="cmd-block copy-wrap">
+        <button class="copy-btn" aria-label="Copy command">
+          <svg viewBox="0 0 16 16"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          copy
+        </button>
         <div class="cmd-header">
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
+          <div class="cmd-dots"><div class="cmd-dot"></div><div class="cmd-dot"></div><div class="cmd-dot"></div></div>
           <span class="cmd-title"><span>snapr diff</span> — pixel-diff two screenshot directories</span>
         </div>
         <div class="cmd-body"><span class="cmd-comment"># compare baseline vs current, fail on any diff</span>
@@ -597,11 +736,14 @@ snapr diff screenshots/baseline screenshots/current --fail-on-diff
 <span class="cmd-comment"># stricter threshold, ignore tiny changes</span>
 snapr diff screenshots/v1 screenshots/v2 --threshold 0.05 --min-percent 1.0</div>
       </div>
-      <div class="cmd-block">
+
+      <div class="cmd-block copy-wrap">
+        <button class="copy-btn" aria-label="Copy command">
+          <svg viewBox="0 0 16 16"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+          copy
+        </button>
         <div class="cmd-header">
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
-          <div class="cmd-dot"></div>
+          <div class="cmd-dots"><div class="cmd-dot"></div><div class="cmd-dot"></div><div class="cmd-dot"></div></div>
           <span class="cmd-title"><span>snapr report</span> — generate a self-contained HTML gallery</span>
         </div>
         <div class="cmd-body"><span class="cmd-comment"># default: screenshots/ → screenshots/report.html (base64-embedded)</span>
@@ -610,10 +752,12 @@ snapr report
 <span class="cmd-comment"># named report for a deploy preview</span>
 snapr report --title "prowlrbot.com — deploy preview" --out docs/gallery.html</div>
       </div>
+
     </div>
   </div>
 </section>
 
+<!-- ── Install ── -->
 <section id="install">
   <div class="container">
     <div class="section-label">Install</div>
@@ -624,41 +768,50 @@ snapr report --title "prowlrbot.com — deploy preview" --out docs/gallery.html<
       <button class="tab-btn" data-tab="brew">Homebrew</button>
       <button class="tab-btn" data-tab="binary">Binary</button>
     </div>
-    <div id="tab-go" class="tab-panel active">
-<span class="cmd-comment"># requires Go 1.22+</span>
+    <div class="copy-wrap">
+      <button class="copy-btn" aria-label="Copy install command">
+        <svg viewBox="0 0 16 16"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+        copy
+      </button>
+      <div id="tab-go" class="tab-panel active"><span class="cmd-comment"># requires Go 1.22+</span>
 go install <span class="cmd-url">github.com/kdairatchi/snapr@latest</span>
 
 <span class="cmd-comment"># make sure $GOPATH/bin is in your $PATH</span>
 export PATH="$(go env GOPATH)/bin:$PATH"</div>
-    <div id="tab-brew" class="tab-panel">
-brew install kdairatchi/tap/snapr</div>
-    <div id="tab-binary" class="tab-panel">
-<span class="cmd-comment"># download for your platform from releases</span>
+      <div id="tab-brew" class="tab-panel">brew tap kdairatchi/tap
+brew install snapr</div>
+      <div id="tab-binary" class="tab-panel"><span class="cmd-comment"># download for your platform</span>
 <span class="cmd-url">https://github.com/kdairatchi/snapr/releases</span>
 
-<span class="cmd-comment"># verify checksum</span>
+<span class="cmd-comment"># verify checksum (Linux/macOS)</span>
 sha256sum -c checksums.txt
 
-<span class="cmd-comment"># extract and move to PATH (Linux/macOS)</span>
+<span class="cmd-comment"># extract and move to PATH</span>
 tar -xz snapr &lt; snapr_linux_amd64.tar.gz
 sudo mv snapr /usr/local/bin/</div>
+    </div>
   </div>
 </section>
 
-<section class="action-section" style="border-top: 1px solid var(--border);">
+<!-- ── GitHub Action ── -->
+<section id="action" class="action-section" style="border-top: 1px solid var(--border);">
   <div class="container">
     <div class="action-desc">
       <div class="section-label">GitHub Action</div>
       <h2>Drop-in CI integration</h2>
-      <p>One step adds screenshot capture to any workflow. The action installs the binary, verifies the sha256 checksum, and adds snapr to <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--orange)">$PATH</code> automatically.</p>
+      <p>One step adds screenshot capture to any workflow. The action installs the binary, verifies the sha256 checksum, and puts snapr on <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--orange)">$PATH</code> automatically.</p>
       <ul>
         <li>Captures on every push, uploads as a workflow artifact</li>
         <li>Visual regression — diffs PRs against baseline, fails the check on change</li>
         <li>Deploy preview — snap a live site after deployment completes</li>
-        <li>Publish HTML report as artifact with embedded base64 images</li>
+        <li>Publish self-contained HTML report with embedded base64 images</li>
       </ul>
     </div>
-    <div class="yaml-block">
+    <div class="yaml-block copy-wrap">
+      <button class="copy-btn" aria-label="Copy YAML">
+        <svg viewBox="0 0 16 16"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2z"/></svg>
+        copy
+      </button>
       <div class="yaml-header">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="#666"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
         <span>.github/workflows/screenshots.yml</span>
@@ -685,11 +838,12 @@ sudo mv snapr /usr/local/bin/</div>
   </div>
 </section>
 
+<!-- ── Comparison ── -->
 <section style="background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class="container">
     <div class="section-label">Comparison</div>
     <h2>snapr vs gowitness</h2>
-    <p class="section-sub" style="margin-bottom: 2.5rem;">gowitness is a great recon tool. snapr is built for project documentation and CI/CD visual regression.</p>
+    <p class="section-sub">gowitness is a great recon tool. snapr is built for project documentation and CI/CD visual regression.</p>
     <table class="comparison-table">
       <thead>
         <tr>
@@ -701,47 +855,47 @@ sudo mv snapr /usr/local/bin/</div>
       <tbody>
         <tr>
           <td>Screenshot capture</td>
-          <td><span class="check-yes">✓</span></td>
+          <td class="col-snapr"><span class="check-snapr">✓</span></td>
           <td><span class="check-yes">✓</span></td>
         </tr>
         <tr>
           <td>PDF output</td>
-          <td><span class="check-snapr">✓</span></td>
+          <td class="col-snapr"><span class="check-snapr">✓</span></td>
           <td><span class="check-no">—</span></td>
         </tr>
         <tr>
-          <td>Dev server lifecycle (<code style="font-family:var(--font-mono);font-size:0.8em">snapr serve</code>)</td>
-          <td><span class="check-snapr">✓</span></td>
+          <td>Dev server lifecycle (<code style="font-family:var(--font-mono);font-size:0.78em">snapr serve</code>)</td>
+          <td class="col-snapr"><span class="check-snapr">✓</span></td>
           <td><span class="check-no">—</span></td>
         </tr>
         <tr>
           <td>Pixel-diff visual regression</td>
-          <td><span class="check-snapr">✓</span></td>
+          <td class="col-snapr"><span class="check-snapr">✓</span></td>
           <td><span class="check-no">—</span></td>
         </tr>
         <tr>
           <td>Self-contained HTML gallery</td>
-          <td><span class="check-snapr">✓</span></td>
+          <td class="col-snapr"><span class="check-snapr">✓</span></td>
           <td><span class="check-no">—</span></td>
         </tr>
         <tr>
           <td>Multi-viewport capture</td>
-          <td><span class="check-snapr">✓</span></td>
+          <td class="col-snapr"><span class="check-snapr">✓</span></td>
           <td><span class="check-no">—</span></td>
         </tr>
         <tr>
           <td>GitHub Action</td>
-          <td><span class="check-snapr">✓</span></td>
+          <td class="col-snapr"><span class="check-snapr">✓</span></td>
           <td><span class="check-no">—</span></td>
         </tr>
         <tr>
           <td>snapr.toml config</td>
-          <td><span class="check-snapr">✓</span></td>
+          <td class="col-snapr"><span class="check-snapr">✓</span></td>
           <td><span class="check-no">—</span></td>
         </tr>
         <tr>
           <td>Bulk recon / large URL lists</td>
-          <td><span class="check-no">—</span></td>
+          <td class="col-snapr"><span class="check-no">—</span></td>
           <td><span class="check-yes">✓</span></td>
         </tr>
       </tbody>
@@ -749,15 +903,27 @@ sudo mv snapr /usr/local/bin/</div>
   </div>
 </section>
 
+<!-- ── Footer ── -->
 <footer>
-  <p>built by <a href="https://github.com/kdairatchi" target="_blank" rel="noopener">kdairatchi</a> &nbsp;·&nbsp; <a href="https://github.com/kdairatchi/snapr" target="_blank" rel="noopener">github.com/kdairatchi/snapr</a></p>
+  <div class="footer-links">
+    <a href="https://github.com/kdairatchi/snapr" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/kdairatchi/snapr/releases" target="_blank" rel="noopener">Releases</a>
+    <a href="https://github.com/kdairatchi/snapr/blob/main/README.md" target="_blank" rel="noopener">Docs</a>
+    <a href="https://github.com/kdairatchi/snapr/blob/main/.github/action.yml" target="_blank" rel="noopener">Action</a>
+    <a href="https://github.com/kdairatchi" target="_blank" rel="noopener">@kdairatchi</a>
+  </div>
+  <div class="footer-copy">built with snapr &nbsp;·&nbsp; <a href="https://github.com/kdairatchi/snapr/blob/main/LICENSE" target="_blank" rel="noopener">MIT</a></div>
 </footer>
 
 <script>
+(function() {
+  // Nav scroll
+  var nav = document.getElementById('nav');
   window.addEventListener('scroll', function() {
-    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 10);
-  });
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
 
+  // Tab switcher
   document.querySelectorAll('.tab-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var tab = btn.dataset.tab;
@@ -767,6 +933,63 @@ sudo mv snapr /usr/local/bin/</div>
       document.getElementById('tab-' + tab).classList.add('active');
     });
   });
+
+  // Toast
+  var toastEl = document.getElementById('toast');
+  var toastTimer;
+  function showToast() {
+    clearTimeout(toastTimer);
+    toastEl.classList.add('show');
+    toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 1800);
+  }
+
+  // Copy helper
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(function() {
+      var orig = btn.innerHTML;
+      btn.classList.add('copied');
+      btn.innerHTML = btn.innerHTML.replace(/copy/, 'copied');
+      showToast();
+      setTimeout(function() {
+        btn.classList.remove('copied');
+        btn.innerHTML = orig;
+      }, 2000);
+    }).catch(function() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast();
+    });
+  }
+
+  // .copy-btn — copies sibling .cmd-body or .tab-panel.active or .yaml-body text
+  document.querySelectorAll('.copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var wrap = btn.closest('.copy-wrap');
+      // Try cmd-body first
+      var target = wrap.querySelector('.cmd-body');
+      // Then active tab-panel
+      if (!target) target = wrap.querySelector('.tab-panel.active');
+      // Then yaml-body
+      if (!target) target = wrap.querySelector('.yaml-body');
+      if (target) copyText(target.textContent.trim(), btn);
+    });
+  });
+
+  // .copy-btn-inline — copies data-copy attribute
+  document.querySelectorAll('.copy-btn-inline').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var text = btn.dataset.copy;
+      if (text) copyText(text, btn);
+    });
+  });
+})();
 </script>
 </body>
 </html>
